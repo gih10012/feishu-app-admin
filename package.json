@@ -1,0 +1,48 @@
+{
+  "name": "@gih10012/feishu-app-admin",
+  "version": "0.3.0",
+  "description": "Declarative CLI for Feishu/Lark developer-console administration, with an optional agent skill.",
+  "type": "module",
+  "bin": {
+    "feishu-app-admin": "bin/feishu-app-admin.mjs"
+  },
+  "exports": {
+    ".": "./src/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "examples",
+    "skills",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "check": "node --check src/cli.mjs && node --check bin/feishu-app-admin.mjs && node src/cli.mjs self-test",
+    "test": "node --test",
+    "prepack": "npm run check && npm test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gih10012/feishu-app-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gih10012/feishu-app-admin/issues"
+  },
+  "homepage": "https://github.com/gih10012/feishu-app-admin#readme",
+  "keywords": [
+    "feishu",
+    "lark",
+    "cli",
+    "codex-skill",
+    "developer-console",
+    "automation"
+  ],
+  "author": "gih10012",
+  "license": "MIT"
+}

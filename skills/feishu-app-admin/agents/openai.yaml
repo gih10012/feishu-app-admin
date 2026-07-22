@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feishu App Admin"
+  short_description: "自动创建、配置、订阅事件并发布飞书开放平台应用，支持重复执行"
+  default_prompt: "Use $feishu-app-admin to create, configure, and publish a Feishu Open Platform application."

@@ -1,0 +1,27 @@
+{
+  "platform": "feishu",
+  "operations": [
+    {
+      "id": "create",
+      "action": "app.create",
+      "name": "Automation Bot",
+      "description": "Created by feishu-app-admin"
+    },
+    {
+      "id": "bot",
+      "action": "bot.set",
+      "enabled": true
+    },
+    {
+      "id": "scopes",
+      "action": "scopes.update",
+      "operation": "add",
+      "tenant_scopes": ["im:message:send_as_bot"]
+    },
+    {
+      "id": "mode",
+      "action": "event.mode",
+      "event_mode": "websocket"
+    }
+  ]
+}

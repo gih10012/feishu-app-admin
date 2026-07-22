@@ -1,0 +1,11 @@
+{
+  "platform": "feishu",
+  "app_id": "cli_replace_with_your_app_id",
+  "operations": [
+    {
+      "id": "inspect",
+      "action": "app.inspect",
+      "sections": ["event", "callback", "bot", "external-sharing"]
+    }
+  ]
+}
