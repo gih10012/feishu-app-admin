@@ -49,6 +49,13 @@ npm install --global github:gih10012/feishu-app-admin --prefix ~/.local
 
 Ensure `~/.local/bin` is on `PATH`.
 
+Hardened npm 12 installations may disable Git dependencies by default and
+return `EALLOWGIT`. Allow this explicit GitHub install for that invocation:
+
+```bash
+npm install --global github:gih10012/feishu-app-admin --allow-git=all
+```
+
 For development:
 
 ```bash

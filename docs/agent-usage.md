@@ -11,7 +11,8 @@ command -v feishu-app-admin
 ```
 
 Use `--prefix ~/.local` when the system npm prefix is not writable and confirm
-that `~/.local/bin` is on `PATH`.
+that `~/.local/bin` is on `PATH`. On hardened npm 12 configurations that return
+`EALLOWGIT`, add `--allow-git=all` for this explicit repository install.
 
 ## Install the optional Codex skill
 
