@@ -87,6 +87,11 @@ Feishu/Lark. Pass `--chrome <path>` when using a portable or enterprise-managed
 browser, and optionally pass `--profile-dir <path>` to inspect an existing
 profile.
 
+For a deeper local check, run `feishu-app-admin doctor --browser-smoke`. This
+launches one temporary headless browser, verifies the DevTools Protocol, closes
+the entire browser process tree, and deletes the temporary profile. It still
+does not log in or contact Feishu/Lark.
+
 ## First login
 
 Use a dedicated profile. The CLI opens one browser window for interactive login

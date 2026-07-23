@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 
+import { probeBrowser } from "./browser.mjs";
 import {
   checkDirectoryWritable,
   findBrowser,
@@ -52,6 +53,16 @@ export async function diagnoseEnvironment(options = {}) {
     checks.push({ name: "browser", ok: false, detail: error.message });
   }
 
+  let browserProbe = null;
+  if (options["browser-smoke"] && browser) {
+    try {
+      browserProbe = await probeBrowser({ chrome: browser });
+      checks.push({ name: "browser_cdp", ok: true, detail: browserProbe.product });
+    } catch (error) {
+      checks.push({ name: "browser_cdp", ok: false, detail: error.message });
+    }
+  }
+
   const state = stateDirectory();
   try {
     await checkDirectoryWritable(state);
@@ -79,9 +90,12 @@ export async function diagnoseEnvironment(options = {}) {
       node: process.versions.node,
     },
     browser,
+    browser_probe: browserProbe,
     state_directory: state,
     permission_model: permissionModel(),
     checks,
-    note: "doctor does not launch a browser, log in, or contact Feishu/Lark",
+    note: options["browser-smoke"]
+      ? "doctor launched one temporary headless browser; it did not log in or contact Feishu/Lark"
+      : "doctor did not launch a browser, log in, or contact Feishu/Lark",
   };
 }

@@ -53,7 +53,7 @@ test("doctor validates the native platform without launching a browser", () => {
     const output = JSON.parse(result.stdout);
     assert.equal(output.ok, true);
     assert.equal(output.browser, process.execPath);
-    assert.match(output.note, /does not launch a browser/);
+    assert.match(output.note, /did not launch a browser/);
   } finally {
     rmSync(state, { recursive: true, force: true });
   }

@@ -40,6 +40,7 @@ function parseArgs(argv) {
     "reuse-session",
     "no-store-secrets",
     "show-browser",
+    "browser-smoke",
   ]);
 
   while (args.length > 0) {
@@ -67,7 +68,7 @@ function usage() {
   return `feishu-app-admin ${VERSION}
 
 Usage:
-  feishu-app-admin doctor   [--chrome <path>] [--profile-dir <path>]
+  feishu-app-admin doctor   [--chrome <path>] [--profile-dir <path>] [--browser-smoke]
   feishu-app-admin validate --manifest <file.json>
   feishu-app-admin plan     --manifest <file.json>
   feishu-app-admin apply    --manifest <file.json> [--yes]
@@ -82,6 +83,7 @@ Browser options:
   --reuse-session          Reuse the default dedicated browser profile
   --profile-dir <path>     Reuse an explicit dedicated browser profile
   --show-browser           Force one interactive login/re-authentication window
+  --browser-smoke          Doctor only: launch one temporary headless CDP probe
 
 Execution options:
   --yes                    Confirm all writes already authorized by the user

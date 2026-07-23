@@ -20,7 +20,7 @@ authentication. The CLI handles known operating-system differences directly.
 Run:
 
 ```text
-feishu-app-admin doctor [--chrome <path>] [--profile-dir <path>]
+feishu-app-admin doctor [--chrome <path>] [--profile-dir <path>] [--browser-smoke]
 ```
 
 The command returns structured JSON and checks:
@@ -31,7 +31,10 @@ The command returns structured JSON and checks:
 - native state-directory creation and protection
 - optional stored-profile presence
 
-It does not start Chrome, inspect cookies, log in, or contact Feishu/Lark.
+By default it does not start Chrome, inspect cookies, log in, or contact
+Feishu/Lark. `--browser-smoke` launches one temporary headless browser to verify
+process startup, DevTools Protocol connectivity, process-tree shutdown, and
+profile cleanup without contacting Feishu/Lark.
 
 ## Browser discovery
 

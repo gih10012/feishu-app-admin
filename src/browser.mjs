@@ -80,6 +80,9 @@ class CDPClient {
 async function waitForDebugPort(profileDir, child) {
   const activePort = path.join(profileDir, "DevToolsActivePort");
   for (let attempt = 0; attempt < 200; attempt += 1) {
+    if (child.spawnError) {
+      throw new CliError(`browser could not start: ${child.spawnError.message}`, { exitCode: 4 });
+    }
     if (child.exitCode !== null) {
       throw new CliError(`browser exited before login (code ${child.exitCode})`, { exitCode: 4 });
     }
@@ -159,6 +162,67 @@ async function removeTemporaryProfile(profileDir) {
   await rm(profileDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }
 
+function browserArguments(profileDir, url, { headless = false } = {}) {
+  const args = [
+    "--remote-debugging-port=0",
+    `--user-data-dir=${profileDir}`,
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--disable-background-networking",
+    "--disable-component-update",
+    "--disable-sync",
+    url,
+  ];
+  if (headless) args.unshift("--headless=new", "--window-size=1280,800");
+  return args;
+}
+
+function spawnBrowser(executable, args) {
+  const child = spawn(executable, args, { stdio: "ignore", windowsHide: true });
+  child.spawnError = null;
+  child.once("error", (error) => {
+    child.spawnError = error;
+  });
+  return child;
+}
+
+async function closeBrowser(client, child) {
+  try {
+    await client?.call("Browser.close");
+  } catch {
+    // The browser may close its CDP socket before acknowledging the command.
+  }
+  client?.close();
+  await terminateProcessTree(child);
+}
+
+export async function probeBrowser(options = {}) {
+  const executable = await findBrowser(options.chrome);
+  const profileDir = await mkdtemp(path.join(os.tmpdir(), "feishu-app-admin-probe-"));
+  let child;
+  let client;
+  try {
+    await ensurePrivateDirectory(profileDir);
+    child = spawnBrowser(
+      executable,
+      browserArguments(profileDir, "about:blank", { headless: true }),
+    );
+    const port = await waitForDebugPort(profileDir, child);
+    const target = await findPageTarget(port);
+    client = new CDPClient(target.webSocketDebuggerUrl);
+    await client.connect();
+    const version = await client.call("Browser.getVersion");
+    return {
+      executable,
+      product: version.product || null,
+      protocol_version: version.protocolVersion || null,
+    };
+  } finally {
+    await closeBrowser(client, child);
+    await removeTemporaryProfile(profileDir);
+  }
+}
+
 export async function launchPortalSession(platform, options = {}) {
   const chrome = await findBrowser(options.chrome);
   const requestedProfile = options["profile-dir"]
@@ -171,19 +235,10 @@ export async function launchPortalSession(platform, options = {}) {
   await ensurePrivateDirectory(profileDir);
   await rm(path.join(profileDir, "DevToolsActivePort"), { force: true });
 
-  const browserArgs = [
-    "--remote-debugging-port=0",
-    `--user-data-dir=${profileDir}`,
-    "--no-first-run",
-    "--no-default-browser-check",
-    "--disable-background-networking",
-    "--disable-component-update",
-    "--disable-sync",
-    platformLoginUrl(platform),
-  ];
-  if (useHeadless) browserArgs.unshift("--headless=new", "--window-size=1280,800");
-
-  const child = spawn(chrome, browserArgs, { stdio: "ignore", windowsHide: true });
+  const child = spawnBrowser(
+    chrome,
+    browserArguments(profileDir, platformLoginUrl(platform), { headless: useHeadless }),
+  );
   let client;
   try {
     const port = await waitForDebugPort(profileDir, child);
@@ -253,13 +308,7 @@ export async function launchPortalSession(platform, options = {}) {
               cookieHeader: capturedCookieHeader,
             },
             close: async () => {
-              try {
-                await client.call("Browser.close");
-              } catch {
-                // Fall through to platform-specific process-tree cleanup.
-              }
-              client.close();
-              await terminateProcessTree(child);
+              await closeBrowser(client, child);
               if (!requestedProfile) await removeTemporaryProfile(profileDir);
             },
           };

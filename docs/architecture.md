@@ -21,7 +21,7 @@ honor the CLI's authorization and browser-profile rules.
 | `portal-client.mjs` | Restricted `/developers/v1` HTTP client and uploads |
 | `operations.mjs` | High-level developer-console actions |
 | `runner.mjs` | Ordered manifest execution and partial-failure reporting |
-| `doctor.mjs` | Offline environment diagnostics |
+| `doctor.mjs` | Offline environment diagnostics and optional local CDP smoke test |
 | `output.mjs` | Structured output and recursive redaction |
 | `cli.mjs` | User-facing command routing |
 

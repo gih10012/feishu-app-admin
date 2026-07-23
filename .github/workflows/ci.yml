@@ -25,5 +25,5 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run smoke-install
-      - run: node bin/feishu-app-admin.mjs doctor
+      - run: node bin/feishu-app-admin.mjs doctor --browser-smoke
       - run: npm pack --dry-run
