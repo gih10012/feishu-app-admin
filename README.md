@@ -190,6 +190,26 @@ the CLI. Install the CLI first, then copy or install
 [`skills/feishu-app-admin`](skills/feishu-app-admin) into the agent's skill
 directory. See [Agent integration](docs/agent-usage.md).
 
+To let Codex perform the complete installation, paste this prompt into a Codex
+session:
+
+> Install `feishu-app-admin` and its optional Codex skill from
+> `https://github.com/gih10012/feishu-app-admin` at tag `v0.4.0`. Detect the
+> operating system and shell first, verify Node.js 22 or later and a supported
+> Chrome/Chromium/Edge installation, then install the CLI with
+> `npm install --global github:gih10012/feishu-app-admin#v0.4.0`. If the npm
+> global prefix is not writable, choose a user-writable prefix appropriate for
+> this Linux, macOS, or Windows environment and ensure its executable directory
+> is on `PATH`; if npm reports `EALLOWGIT`, retry this explicit repository
+> install with `--allow-git=all`. Use the `skill-installer` skill to install the
+> Codex skill from repository `gih10012/feishu-app-admin`, ref `v0.4.0`, path
+> `skills/feishu-app-admin`. Finally verify `feishu-app-admin --version`, run
+> `feishu-app-admin doctor --browser-smoke`, confirm the skill files are present,
+> and tell me whether Codex must be restarted to discover the new skill. Resolve
+> ordinary platform and `PATH` compatibility issues yourself. Do not delete or
+> overwrite existing profiles, do not print secrets, and do not open a login
+> browser unless I explicitly ask you to authenticate.
+
 ## Status
 
 This project is experimental because the developer-console backend is private
