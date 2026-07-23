@@ -21,6 +21,8 @@ included under [`skills/feishu-app-admin`](skills/feishu-app-admin).
 - Add or remove precise tenant/user permissions and event subscriptions.
 - Configure webhook or WebSocket delivery, create versions, and submit them.
 - Keep multiple browser-authenticated accounts in separate persistent profiles.
+- Auto-detect Chrome/Edge and protect local state on Linux, macOS, and Windows.
+- Diagnose Node, browser, state, and profile readiness without opening a browser.
 - Plan declarative changes before execution and redact sensitive output.
 - Use `raw.request` only as a restricted fallback for unsupported settings.
 
@@ -32,6 +34,12 @@ included under [`skills/feishu-app-admin`](skills/feishu-app-admin).
 
 There are no runtime npm dependencies.
 
+Pure CLI behavior is tested on Linux, macOS, and Windows in GitHub Actions.
+Authenticated browser integration is verified on Linux; platform-specific
+browser policies, proxies, and enterprise security software can still require
+`--chrome` or `FEISHU_APP_ADMIN_HOME`. Run `feishu-app-admin doctor` first. See
+[Platform support](docs/platform-support.md) for details.
+
 ## Install
 
 Install directly from GitHub:
@@ -41,7 +49,7 @@ npm install --global github:gih10012/feishu-app-admin
 feishu-app-admin --version
 ```
 
-If the system npm prefix is not writable, install without sudo:
+On Linux/macOS, if the system npm prefix is not writable, install without sudo:
 
 ```bash
 npm install --global github:gih10012/feishu-app-admin --prefix ~/.local
@@ -65,6 +73,20 @@ npm install
 npm link
 ```
 
+## Environment check
+
+Run this before the first login:
+
+```bash
+feishu-app-admin doctor
+```
+
+`doctor` checks the Node runtime, browser discovery, native state directory,
+and its protection model. It does not launch a browser, log in, or contact
+Feishu/Lark. Pass `--chrome <path>` when using a portable or enterprise-managed
+browser, and optionally pass `--profile-dir <path>` to inspect an existing
+profile.
+
 ## First login
 
 Use a dedicated profile. The CLI opens one browser window for interactive login
@@ -85,6 +107,14 @@ feishu-app-admin apps \
 
 Use a different directory for every account. Do not run multiple profile-backed
 Chrome instances concurrently.
+
+On Windows PowerShell:
+
+```powershell
+$profile = Join-Path $env:LOCALAPPDATA "feishu-app-admin\profiles\work"
+feishu-app-admin doctor --profile-dir $profile
+feishu-app-admin apps --profile-dir $profile --show-browser
+```
 
 ## Direct commands
 
@@ -133,17 +163,20 @@ See [Manifest reference](docs/manifest.md) for every high-level action and
 
 ## State and secrets
 
-The default state directory is:
+Default state directories follow each operating system:
 
-```text
-${XDG_STATE_HOME:-~/.local/state}/feishu-app-admin
-```
+| Platform | Directory |
+| --- | --- |
+| Linux | `${XDG_STATE_HOME:-~/.local/state}/feishu-app-admin` |
+| macOS | `~/Library/Application Support/feishu-app-admin` |
+| Windows | `%LOCALAPPDATA%\feishu-app-admin` |
 
 Set `FEISHU_APP_ADMIN_HOME` to override it. `--reuse-session` uses a dedicated
-profile below this directory. App Secrets are stored under `apps/<app-id>.json`;
-the directory uses mode `0700` and files use mode `0600`. Secrets, cookies,
-CSRF values, verification tokens, and encryption keys are redacted from JSON
-output.
+profile below this directory. App Secrets are stored under `apps/<app-id>.json`.
+Linux/macOS use directory mode `0700` and file mode `0600`; Windows removes ACL
+inheritance and grants full control to the current user, SYSTEM, and local
+Administrators. Secrets, cookies, CSRF values, verification tokens, and
+encryption keys are redacted from JSON output.
 
 ## Agent use
 

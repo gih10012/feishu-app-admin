@@ -4,7 +4,10 @@
 
 The CLI obtains developer-console cookies and CSRF material from a dedicated
 Chrome profile. Never report these values in an issue. App Secrets are written
-outside the repository with directory mode `0700` and file mode `0600`.
+outside the repository. Linux/macOS use directory mode `0700` and file mode
+`0600`. Windows removes inherited ACLs and grants full control to the current
+user, SYSTEM, and local Administrators. Failure to apply the platform-native
+protection aborts secret storage.
 
 Do not use your normal Chrome profile with this project. Assign one dedicated
 `--profile-dir` per Feishu/Lark account and keep profile directories out of Git.

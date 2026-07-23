@@ -1,6 +1,6 @@
 {
   "name": "@gih10012/feishu-app-admin",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Declarative CLI for Feishu/Lark developer-console administration, with an optional agent skill.",
   "type": "module",
   "bin": {
@@ -20,8 +20,8 @@
     "SECURITY.md"
   ],
   "scripts": {
-    "check": "node --check src/cli.mjs && node --check bin/feishu-app-admin.mjs && node src/cli.mjs self-test",
-    "test": "node --test",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/test.mjs",
     "prepack": "npm run check && npm test"
   },
   "engines": {

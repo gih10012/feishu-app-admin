@@ -10,6 +10,12 @@
 
 ## Direct reads
 
+Check the local environment without opening a browser:
+
+```bash
+feishu-app-admin doctor
+```
+
 List applications:
 
 ```bash
@@ -90,10 +96,11 @@ Run `feishu-app-admin actions` to obtain the machine-readable current catalog.
 
 ## Profiles and state
 
-The default state root is
-`${XDG_STATE_HOME:-~/.local/state}/feishu-app-admin`; the
-`FEISHU_APP_ADMIN_HOME` environment variable overrides it. Use explicit profile
-paths for multiple accounts and run them sequentially.
+The default state root is `${XDG_STATE_HOME:-~/.local/state}/feishu-app-admin`
+on Linux, `~/Library/Application Support/feishu-app-admin` on macOS, and
+`%LOCALAPPDATA%\feishu-app-admin` on Windows. The `FEISHU_APP_ADMIN_HOME`
+environment variable overrides it. Use explicit profile paths for multiple
+accounts and run them sequentially.
 
 Existing profiles run headlessly. Add `--show-browser` only for a first or
 expired login. The CLI closes the interactive window itself.

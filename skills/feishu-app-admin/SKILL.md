@@ -15,11 +15,17 @@ Locate the CLI before doing any portal work:
 ```bash
 command -v feishu-app-admin
 feishu-app-admin --version
+feishu-app-admin doctor
 ```
 
 If it is absent, report that the CLI must be installed from
 `https://github.com/gih10012/feishu-app-admin`. Do not improvise browser-console
 requests from this skill.
+
+Run `doctor` before the first login on a machine. It must not open a browser or
+contact Feishu/Lark. Resolve failed Node, browser, state-directory, or native
+permission checks before attempting authentication. Use `--chrome` for a
+nonstandard browser installation.
 
 Read [references/actions.md](references/actions.md) completely before creating
 or changing a manifest.

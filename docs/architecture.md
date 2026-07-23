@@ -2,13 +2,28 @@
 
 ## CLI first
 
-`src/cli.mjs` contains the executable implementation. `bin/feishu-app-admin.mjs`
-is a small package entry point. The CLI does not import, discover, or depend on
-anything under `skills/`.
+`bin/feishu-app-admin.mjs` is a small package entry point. `src/cli.mjs` only
+parses commands and routes them to focused modules. The CLI does not import,
+discover, or depend on anything under `skills/`.
 
 The optional skill is an adapter in the other direction: it teaches an agent to
 locate the installed `feishu-app-admin` command, choose high-level actions, and
 honor the CLI's authorization and browser-profile rules.
+
+## Modules
+
+| Module | Responsibility |
+| --- | --- |
+| `constants.mjs` | Portal hosts, versions, actions, and risk metadata |
+| `manifest.mjs` | Validation, planning, and template resolution |
+| `platform.mjs` | Native paths, browser discovery, permissions, and process cleanup |
+| `browser.mjs` | Chrome lifecycle, CDP, login detection, and session capture |
+| `portal-client.mjs` | Restricted `/developers/v1` HTTP client and uploads |
+| `operations.mjs` | High-level developer-console actions |
+| `runner.mjs` | Ordered manifest execution and partial-failure reporting |
+| `doctor.mjs` | Offline environment diagnostics |
+| `output.mjs` | Structured output and recursive redaction |
+| `cli.mjs` | User-facing command routing |
 
 ## Execution flow
 
@@ -20,6 +35,9 @@ honor the CLI's authorization and browser-profile rules.
    DevTools Protocol.
 6. Execute high-level operations sequentially through the portal client.
 7. Redact structured output and close the browser process.
+
+Platform-specific behavior stays in `platform.mjs`. Operations and portal
+request shapes do not branch on the host operating system.
 
 ## Authentication
 
